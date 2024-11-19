@@ -13,4 +13,3 @@ This project simulates the evolution of populations of creatures and their inter
 ### Requirements
 - Python 3.8 or higher
 - Required libraries
-- 
