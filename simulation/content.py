@@ -11,7 +11,6 @@ class creature(ABC):
     @abstractmethod
     def express_dna(self):
         pass
-    
     def clone(self):
         return creature(self.dna)
 
@@ -40,12 +39,12 @@ class animal(creature):
 
 
 
-    def reproduce(parent_dna, mutation_rate=0.1):
+    def reproduce(self,mutation_rate=0.1):
         
         possible_genes = "abcdef"
         
         offspring_dna = ""
-        for gene in parent_dna:
+        for gene in self.dna:
             if random.random() < mutation_rate:
                 new_gene = random.choice([g for g in possible_genes if g != gene])
                 offspring_dna += new_gene
@@ -53,7 +52,24 @@ class animal(creature):
                 offspring_dna += gene
         
         return offspring_dna
+    def die(self,msg):
+        print(msg)
+        del self
 
+    def consume(self,fruit):
+        self.food += fruit[0]
+        poison_chance = fruit[1]*(1-self.toxicity_resistance)
+        if random.choices((0,1),weights=[1-poison_chance,poison_chance]):
+            self.die("dies of poison")
+    
+    def energy_consumption(self):
+        self.food -= self.size+self.speed
+        if self.food <=0:
+            self.die("dies of hunger")
+        
+        number_of_ofspring = self.food//self.reproduction_threshold
+        return [self.reproduce() for i in range(number_of_ofspring)]
+        
 
 class tree(creature):
     trees = []
@@ -79,7 +95,16 @@ class tree(creature):
         self.toxicity = dna_mapping['toxicity'][self.dna[3]]
 
     def grow_fruit(self):
-        pass
+        return [(self.caloric_value,self.toxicity) for i in range(self.fruit_count)]
+    
+    def host_animals(self,animals):
+        animals.sort(key=lambda x:x.size)
+        fruits = self.grow_fruit()
+        if len(fruits)>len(animals):
+            fruits = fruits[:len(animals)]
+        for i in range(len(fruits)):
+            animals[i].consume(fruits[i])
+
 
 class world():
     worlds = []
@@ -91,7 +116,6 @@ class world():
         world.worlds.append(self)
 
     def create_trees(self,trees_dna):
-        trees_dna = set(trees_dna)
         if len(self.trees)+len(trees_dna)>(self.size-1)**2:
             return "insufficient space"
         while trees_dna:
@@ -99,8 +123,22 @@ class world():
             self.trees.append(tree(trees_dna.pop(),random.choice(possible_positions)))
         return "Planting complete"
 
-    def create_animals(self,animals):
-        pass
+    def create_animals(self,animal_dnas):
+        while self.max_animals>len(self.animals) and animal_dnas:
+            self.animals.append(animal(animal_dnas.pop()))
+        return animal_dnas
     
     def step(self):
-        pass
+        hosted_animals_counter = 0
+        for i in range(len(self.trees)):
+            if hosted_animals_counter == len(self.animals):
+                break
+            bound = min(len(self.animals),hosted_animals_counter+self.trees[i].size)
+            self.trees[i].host_animals(self.animals[hosted_animals_counter:bound])
+            hosted_animals_counter += self.trees[i].size
+        
+        new_animals_dnas = []
+        for i in self.animals:
+            new_animals_dnas += i.energy_consumption()
+        
+        self.create_animals(new_animals_dnas)
