@@ -6,7 +6,7 @@ for trees:
             {"a":5,"b":4,"c":3,"d":2,"e":1,"f":0}
         the third is size as the ammount of creatures that can compete for its fruits at once.
             {"a":10,"b":5,"c":3,"d":2,"e":1,"f":0}
-        the forth is for toxicity of the fruit (chance to get poisoned an animal consuming the food).
+        the forth is for toxicity of the fruit (chance to poison an animal upon consuming the fruit).
             {"a": 0,"b":0.01,"c":0.1,"d":0.25,"e":0.5,"f":1}
 
 for animals:
@@ -22,3 +22,5 @@ for animals:
             {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10}
         the forth is for resistance to toxicity (chance to survive poisioning)
             {"a":1,"b":0.5,"c":0.25,"d":0.1,"e":0.01,"f":0}
+
+for the moment the reproduction of animals is done asexually so dna is copied as is with a chance of a mutation
