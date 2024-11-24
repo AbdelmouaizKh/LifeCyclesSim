@@ -1,26 +1,28 @@
 for trees:
     dna is a string composed of four letters.
         the first is for caloric value of each fruit produced.
-            {"a":200,"b":100,"c":50,"d":10,"e":0,"f":-50}
         the second is the number of fruits produces after each epoch.
-            {"a":5,"b":4,"c":3,"d":2,"e":1,"f":0}
         the third is size as the ammount of creatures that can compete for its fruits at once.
-            {"a":10,"b":5,"c":3,"d":2,"e":1,"f":0}
         the forth is for toxicity of the fruit (chance to poison an animal upon consuming the fruit).
-            {"a": 0,"b":0.01,"c":0.1,"d":0.25,"e":0.5,"f":1}
+
+        'caloric_value': {"a":200,"b":100,"c":50,"d":10,"e":0,"f":-50},
+        'fruit_count': {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1, "f": 0},
+        'size': {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1, "f": 0},
+        'toxicity': {"a": 0, "b": 0.01, "c": 0.1, "d": 0.25, "e": 0.5, "f": 1}
 
 for animals:
     dna is a string composed of four letters.
         the first is for size (larger animals require more food to survive and reproduce 
         but can compete better for food against small animals).
-            {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10}
         the second is for threshold for reproduction (the creature can reproduce after 
         reaching this ammount of food).
-            {"a":10,"b":20,"c":50,"d":100,"e":200,"f":1000}
         the third is for speed (when the day starts animals get assinged to better trees in the order
         of their speeds but it increases energy consumption).
-            {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10}
         the forth is for resistance to toxicity (chance to survive poisioning)
-            {"a":1,"b":0.5,"c":0.25,"d":0.1,"e":0.01,"f":0}
+        
+        'size': {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10},
+        'reproduction_threshold': {"a": 100, "b": 200, "c": 300, "d": 500, "e": 750, "f": 1000},
+        'speed': {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10},
+        'toxicity_resistance': {"a": 1, "b": 0.5, "c": 0.25, "d": 0.1, "e": 0.01, "f": 0}
 
 for the moment the reproduction of animals is done asexually so dna is copied as is with a chance of a mutation
