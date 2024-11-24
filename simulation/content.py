@@ -6,7 +6,7 @@ class creature(ABC):
     def __init__(self,dna):
         self.dna = dna
         self.express_dna()
-        creature.creatures.append(self)
+        #creature.creatures.append(self)
 
     @abstractmethod
     def express_dna(self):
@@ -22,14 +22,15 @@ class animal(creature):
         self.reproduction_threshold = None
         self.speed = None
         self.toxicity_resistance = None
+        self.alive = True
         super().__init__(dna)
-        animal.animals.append(self)
+        #animal.animals.append(self)
 
     def express_dna(self):
         dna_mapping = {
-            'size': {"a": 100, "b": 80, "c": 60, "d": 40, "e": 20, "f": 10},
-            'reproduction_threshold': {"a": 10, "b": 20, "c": 50, "d": 100, "e": 200, "f": 1000},
-            'speed': {"a": 100, "b": 80, "c": 60, "d": 40, "e": 20, "f": 10},
+            'size': {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10},
+            'reproduction_threshold': {"a": 100, "b": 200, "c": 300, "d": 500, "e": 750, "f": 1000},
+            'speed': {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10},
             'toxicity_resistance': {"a": 1, "b": 0.5, "c": 0.25, "d": 0.1, "e": 0.01, "f": 0}
         }
         self.size = dna_mapping['size'][self.dna[0]]
@@ -53,8 +54,8 @@ class animal(creature):
         
         return offspring_dna
     def die(self,msg):
-        print(msg)
-        del self
+        #print(msg)
+        self.alive = False
 
     def consume(self,fruit):
         self.food += fruit[0]
@@ -68,8 +69,11 @@ class animal(creature):
             self.die("dies of hunger")
         
         number_of_ofspring = self.food//self.reproduction_threshold
+        chance = random.choices((0,1),weights=[(1-self.food)/self.reproduction_threshold,self.food/self.reproduction_threshold])[0]
+        number_of_ofspring += chance
+        self.food = self.food*(1-chance)
         return [self.reproduce() for i in range(number_of_ofspring)]
-        
+
 
 class tree(creature):
     trees = []
@@ -80,13 +84,13 @@ class tree(creature):
         self.size = None
         self.toxicity = None
         super().__init__(dna)
-        tree.trees.append(self)
+        #tree.trees.append(self)
 
     def express_dna(self):
         dna_mapping = {
-            'caloric_value': {"a": 200, "b": 100, "c": 50, "d": 10, "e": 0, "f": -50},
+            'caloric_value': {"a":200,"b":100,"c":50,"d":10,"e":0,"f":-50},
             'fruit_count': {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1, "f": 0},
-            'size': {"a": 10, "b": 5, "c": 3, "d": 2, "e": 1, "f": 0},
+            'size': {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1, "f": 0},
             'toxicity': {"a": 0, "b": 0.01, "c": 0.1, "d": 0.25, "e": 0.5, "f": 1}
         }
         self.caloric_value = dna_mapping['caloric_value'][self.dna[0]]
@@ -98,10 +102,12 @@ class tree(creature):
         return [(self.caloric_value,self.toxicity) for i in range(self.fruit_count)]
     
     def host_animals(self,animals):
-        animals.sort(key=lambda x:x.size)
+        animals.sort(key=lambda x:x.size+x.speed)
         fruits = self.grow_fruit()
-        if len(fruits)>len(animals):
-            fruits = fruits[:len(animals)]
+        if len(animals)==0 or len(fruits)==0:
+            return None
+        while len(fruits)>len(animals):
+            animals[0].consume(fruits.pop())
         for i in range(len(fruits)):
             animals[i].consume(fruits[i])
 
@@ -129,6 +135,7 @@ class world():
         return animal_dnas
     
     def step(self):
+        self.animals = list(filter(lambda x:x.alive,self.animals))
         hosted_animals_counter = 0
         for i in range(len(self.trees)):
             if hosted_animals_counter == len(self.animals):
