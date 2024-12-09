@@ -13,6 +13,8 @@ class creature(ABC):
         pass
     def clone(self):
         return creature(self.dna)
+    def __str__(self):
+        return str(self.dna)
 
 class animal(creature):
     animals = []
@@ -40,7 +42,7 @@ class animal(creature):
 
 
 
-    def reproduce(self,mutation_rate=0.1):
+    def reproduce(self,mutation_rate=0.2):
         
         possible_genes = "abcdef"
         
@@ -113,29 +115,37 @@ class tree(creature):
 
 
 class world():
-    worlds = []
     def __init__(self,size,trees=[],animals=[],max_animals=100):
         self.size = size
-        self.trees = trees
-        self.animals = animals
+        self.trees = [tree(trees[i]) for i in range(len(trees))]
+        self.animals = [animal(animals[i]) for i in range(len(animals))]
         self.max_animals = max_animals
-        world.worlds.append(self)
 
-    def create_trees(self,trees_dna):
-        if len(self.trees)+len(trees_dna)>(self.size-1)**2:
-            return "insufficient space"
-        while trees_dna:
+    def create_trees(self,tree_dnas):
+        assert len(self.trees)+len(tree_dnas)<=(self.size-1)**2
+        i = 0
+        while i<len(tree_dnas):
             possible_positions = [(x,y) for x in range(1,self.size) for y in range(1,self.size) if (x,y) not in [i.position for i in self.trees]]
-            self.trees.append(tree(trees_dna.pop(),random.choice(possible_positions)))
+            self.trees.append(tree(tree_dnas[i],random.choice(possible_positions)))
+            i += 1
         return "Planting complete"
 
     def create_animals(self,animal_dnas):
-        while self.max_animals>len(self.animals) and animal_dnas:
-            self.animals.append(animal(animal_dnas.pop()))
+        i = 0
+        while self.max_animals>len(self.animals) and i<len(animal_dnas):
+            self.animals.append(animal(animal_dnas[i]))
+            i += 1
         return animal_dnas
+    
+    def tree_dna(self):
+        return [self.trees[i].dna for i in range(len(self.trees))]
+    
+    def animal_dna(self):
+        return [self.animals[i].dna for i in range(len(self.animals))]
     
     def step(self):
         self.animals = list(filter(lambda x:x.alive,self.animals))
+        random.shuffle(self.animals)
         hosted_animals_counter = 0
         for i in range(len(self.trees)):
             if hosted_animals_counter == len(self.animals):
@@ -143,9 +153,11 @@ class world():
             bound = min(len(self.animals),hosted_animals_counter+self.trees[i].size)
             self.trees[i].host_animals(self.animals[hosted_animals_counter:bound])
             hosted_animals_counter += self.trees[i].size
-        
         new_animals_dnas = []
         for i in self.animals:
             new_animals_dnas += i.energy_consumption()
         
         self.create_animals(new_animals_dnas)
+    
+    def reset_world(self):
+        self.__init__(size=self.size,max_animals=self.max_animals)
