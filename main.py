@@ -1,26 +1,14 @@
-# main.py
-
-from simulation.content import world, tree, animal
+from simulation.display import plot_registered_data
+from simulation.helper_functions import world_generator, random_dna_generator
 
 def main():
-    # Initialize the world
-    my_world = world(size=100, max_animals=75)
+    dna_gen_pos = random_dna_generator(10,1)
+    dna_gen_mid = random_dna_generator(10,0)
+    dna_gne_nig = random_dna_generator(10,-1)
+    worlds = world_generator(5,dna_gen_pos.generate(),dna_gen_mid.generate())
+    worlds.initiate()
+    plot_registered_data(worlds.simultaneous_steps(20))
 
-    # Create some trees with random DNA
-    tree_dnas = ["abcd","baef","adda"]
-    animal_dnas = ["cccc","cccc","cccc","cccc","cccc","cccc"]
-    print(my_world.create_trees(tree_dnas))
-    my_world.create_animals(animal_dnas)
-
-    # Run a simulation step
-    print("initial state:"+f"animals alive: {len(my_world.animals)}")
-    for i in range(2000):
-        my_world.step()
-        print(f"animals alive: {len(my_world.animals)}")
-    print("final state:"+f"animals alive: {len(my_world.animals)}")
-    for i in range(len(my_world.animals)):
-        print(my_world.animals[i].dna)
-    
 
 if __name__ == "__main__":
     main()
