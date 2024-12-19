@@ -1,6 +1,4 @@
 # requirements.txt
-
-# Will add as the project expands
 matplotlib  # For visualizations
 if importing matplotlib.pyplot causes a DLL error visit :
 https://stackoverflow.com/questions/75824703/matplotlib-importerror-dll-load-failed-while-importing-cext
