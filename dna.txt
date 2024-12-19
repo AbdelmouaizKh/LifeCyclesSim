@@ -5,13 +5,13 @@ for trees:
         the third is size as the ammount of creatures that can compete for its fruits at once.
         the forth is for toxicity of the fruit (chance to poison an animal upon consuming the fruit).
 
-        'caloric_value': {"a":200,"b":100,"c":50,"d":10,"e":0,"f":-50},
-        'fruit_count': {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1, "f": 0},
-        'size': {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1, "f": 0},
+        'caloric_value': {"a":2000,"b":1500,"c":1000,"d":750,"e":200,"f":100},
+        'fruit_count': {"a": 10, "b": 7, "c": 5, "d": 3, "e": 2, "f": 1},
+        'size': {"a": 10, "b": 7, "c": 5, "d": 3, "e": 2, "f": 1},
         'toxicity': {"a": 0, "b": 0.01, "c": 0.1, "d": 0.25, "e": 0.5, "f": 1}
 
 for animals:
-    dna is a string composed of four letters.
+    dna is a string composed of four letters
         the first is for size (larger animals require more food to survive and reproduce 
         but can compete better for food against small animals).
         the second is for threshold for reproduction (the creature can reproduce after 
@@ -20,9 +20,10 @@ for animals:
         of their speeds but it increases energy consumption).
         the forth is for resistance to toxicity (chance to survive poisioning)
         
-        'size': {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10},
-        'reproduction_threshold': {"a": 100, "b": 200, "c": 300, "d": 500, "e": 750, "f": 1000},
+        'size': {"a":50,"b":40,"c":30,"d":20,"e":10,"f":5},
+        'reproduction_threshold': {"a": 50, "b": 750, "c": 100, "d": 125, "e": 150, "f": 200},
         'speed': {"a":100,"b":80,"c":60,"d":40,"e":20,"f":10},
-        'toxicity_resistance': {"a": 1, "b": 0.5, "c": 0.25, "d": 0.1, "e": 0.01, "f": 0}
+        'toxicity_resistance': {"a": 1, "b": 0.75, "c": 0.5, "d": 0.25, "e": 0.1, "f": 0}
 
-for the moment the reproduction of animals is done asexually so dna is copied as is with a chance of a mutation
+reproduction is now done sexually where there is an equal chance to inherit from the mother or the father with a chance of random mutation 
+for each letter of the dna.
